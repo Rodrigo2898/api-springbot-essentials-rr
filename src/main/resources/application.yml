@@ -1,0 +1,21 @@
+server:
+  error:
+    include-stacktrace: on_param
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_database?useSSL=false&createDatabaseIfNotExists=true
+    username: postgres
+    password: rodrodrigues10
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+
