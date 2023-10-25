@@ -4,6 +4,7 @@ import academy.devdojo.springbootessentialsrr.domain.Pessoa;
 import academy.devdojo.springbootessentialsrr.dto.PessoaDTO;
 import academy.devdojo.springbootessentialsrr.service.PessoaService;
 import academy.devdojo.springbootessentialsrr.util.DateUtil;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +38,7 @@ public class PessoaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Pessoa>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<Pessoa>> findAll(@Parameter(hidden = true) Pageable pageable) {
         Page<Pessoa> pessoas = pessoaService.findAll(pageable);
         return ResponseEntity.ok().body(pessoas);
     }
