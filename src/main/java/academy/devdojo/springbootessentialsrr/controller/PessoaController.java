@@ -75,21 +75,21 @@ public class PessoaController {
         return ResponseEntity.ok().body(pessoas);
     }
 
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping(value = "/admin")
+//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Pessoa> save(@RequestBody @Valid PessoaDTO pessoaDTO) {
         Pessoa pessoa = new Pessoa();
         BeanUtils.copyProperties(pessoaDTO, pessoa);
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaService.save(pessoa));
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/admin/{id}")
     public ResponseEntity<Pessoa> deletePessoa(@PathVariable(value = "id") Integer id) {
         pessoaService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/admin/{id}")
     public ResponseEntity<Pessoa> update(@PathVariable Integer id, @RequestBody @Valid PessoaDTO pessoaDTO) {
         Pessoa pessoa = new Pessoa();
         BeanUtils.copyProperties(pessoaDTO, pessoa);
