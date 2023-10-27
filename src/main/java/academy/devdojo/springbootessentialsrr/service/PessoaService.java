@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
@@ -51,6 +52,22 @@ public class PessoaService {
     public List<Pessoa> findByProfissao(String profissao) {
         return pessoaRepository.findByProfissao(profissao);
     }
+
+
+
+    public List<Pessoa> findByProfissaoAndIdade(String profissao, Integer idade) {
+        return pessoaRepository.findByProfissaoAndIdade(profissao, idade);
+    }
+
+
+//    public List<Object> findByProfissaoAndIdadeBetween20And40() {
+//        return pessoaRepository.findByProfissaoAndIdadeBetween20And40();
+//    }
+
+    public List<Pessoa> findPessoaByName(Set<String> name) {
+        return pessoaRepository.findPessoaByName(name);
+    }
+
 
     @Transactional
     public Pessoa save(Pessoa pessoa) {

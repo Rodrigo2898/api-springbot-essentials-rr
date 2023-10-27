@@ -24,6 +24,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Log4j2
 @RestController
@@ -31,6 +32,8 @@ import java.util.List;
 public class PessoaController {
     private final DateUtil dateUtil;
     private final PessoaService pessoaService;
+
+//    private final Pess
 
     public PessoaController(DateUtil dateUtil, PessoaService pessoaService) {
         this.dateUtil = dateUtil;
@@ -63,6 +66,27 @@ public class PessoaController {
         log.info(userDetails);
         return ResponseEntity.ok().body(pessoa);
     }
+
+    @GetMapping(value = "/custom")
+    public ResponseEntity<List<Pessoa>> findByProfissaoAndIdade(@RequestParam("profissao") String profissao,
+                                                                @RequestParam("idade") Integer idade) {
+        List<Pessoa> pessoa = pessoaService.findByProfissaoAndIdade(profissao, idade);
+        return ResponseEntity.ok().body(pessoa);
+    }
+
+
+//    @GetMapping(value = "/profissao-idade-1")
+//    public ResponseEntity<List<Object>> findByProfissaoAndIdadeBetween20And40() {
+//        List<Object> pessoas = pessoaService.findByProfissaoAndIdadeBetween20And40();
+//        return ResponseEntity.ok().body(pessoas);
+//    }
+
+    @GetMapping(value = "/pessoa-name/{name}")
+    public ResponseEntity<List<Pessoa>> findPessoaByName(@PathVariable Set<String> name) {
+        List<Pessoa> pessoasNames = pessoaService.findPessoaByName(name);
+        return ResponseEntity.ok().body(pessoasNames);
+    }
+
 
 //    @GetMapping(value = "/profissao/{profissao}")
 //    public ResponseEntity<List<Pessoa>> findByProfissao(@PathVariable String profissao) {
