@@ -81,11 +81,11 @@ public class PessoaController {
 //        return ResponseEntity.ok().body(pessoas);
 //    }
 
-    @GetMapping(value = "/pessoa-name/{name}")
-    public ResponseEntity<List<Pessoa>> findPessoaByName(@PathVariable Set<String> name) {
-        List<Pessoa> pessoasNames = pessoaService.findPessoaByName(name);
-        return ResponseEntity.ok().body(pessoasNames);
-    }
+//    @GetMapping(value = "/pessoa-name/{name}")
+//    public ResponseEntity<List<Pessoa>> findPessoaByName(@PathVariable Set<String> name) {
+//        List<Pessoa> pessoasNames = pessoaService.findPessoaByName(name);
+//        return ResponseEntity.ok().body(pessoasNames);
+//    }
 
 
 //    @GetMapping(value = "/profissao/{profissao}")
@@ -97,6 +97,13 @@ public class PessoaController {
     @GetMapping(value = "/category")
     public ResponseEntity<List<Pessoa>> findByProfissao(@RequestParam String profissao) {
         List<Pessoa> pessoas = pessoaService.findByProfissao(profissao);
+        return ResponseEntity.ok().body(pessoas);
+    }
+
+    @GetMapping(value = "/getAll")
+    public ResponseEntity<List<Pessoa>> findWithFilters() {
+        PessoaDTO pessoaDTO = new PessoaDTO();
+        List<Pessoa> pessoas = pessoaService.getAll(pessoaDTO);
         return ResponseEntity.ok().body(pessoas);
     }
 

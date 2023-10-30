@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PessoaRepository extends JpaRepository<Pessoa, Integer>, PessoaNomeRepositoryCustom {
+public interface PessoaRepository extends JpaRepository<Pessoa, Integer> {
     List<Pessoa> findByProfissao(String profissao);
 
     @Query("from Pessoa p where p.profissao = :profissao and p.idade = :idade")

@@ -4,31 +4,29 @@ import academy.devdojo.springbootessentialsrr.domain.Pessoa;
 import academy.devdojo.springbootessentialsrr.dto.PessoaDTO;
 import academy.devdojo.springbootessentialsrr.exceptions.BadRequestException;
 import academy.devdojo.springbootessentialsrr.repository.PessoaRepository;
+import academy.devdojo.springbootessentialsrr.repository.impl.PessoaNomeRepositoryImpl;
 import academy.devdojo.springbootessentialsrr.service.exceptions.DatabaseException;
 import academy.devdojo.springbootessentialsrr.service.exceptions.ResourceNotFoundException;
-import academy.devdojo.springbootessentialsrr.service.exceptions.ResourceNotFoundExceptionProfissao;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
-    public PessoaService(PessoaRepository pessoaRepository) {
+    private final PessoaNomeRepositoryImpl pessoaNomeRepositoryCustom;
+    public PessoaService(PessoaRepository pessoaRepository, PessoaNomeRepositoryImpl pessoaNomeRepositoryCustom) {
         this.pessoaRepository = pessoaRepository;
+        this.pessoaNomeRepositoryCustom = pessoaNomeRepositoryCustom;
     }
 
     public Page<Pessoa> findAll(Pageable pageable) {
@@ -64,8 +62,10 @@ public class PessoaService {
 //        return pessoaRepository.findByProfissaoAndIdadeBetween20And40();
 //    }
 
-    public List<Pessoa> findPessoaByName(Set<String> name) {
-        return pessoaRepository.findPessoaByName(name);
+    public List<Pessoa> getAll(PessoaDTO pessoaDTO) {
+        Pessoa pessoa = new Pessoa();
+        BeanUtils.copyProperties(pessoaDTO, pessoa);
+        return pessoaNomeRepositoryCustom.getWithFilters(pessoaDTO);
     }
 
 
