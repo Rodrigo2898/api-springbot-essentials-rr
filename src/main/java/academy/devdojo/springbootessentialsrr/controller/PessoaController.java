@@ -102,8 +102,9 @@ public class PessoaController {
 
     @GetMapping(value = "/getAll")
     public ResponseEntity<List<Pessoa>> findWithFilters() {
-        PessoaDTO pessoaDTO = new PessoaDTO();
-        List<Pessoa> pessoas = pessoaService.getAll(pessoaDTO);
+//        PessoaDTO pessoaDTO = new PessoaDTO();
+        Pessoa pessoa = new Pessoa();
+        List<Pessoa> pessoas = pessoaService.getAll(pessoa);
         return ResponseEntity.ok().body(pessoas);
     }
 

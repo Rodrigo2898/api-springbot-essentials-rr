@@ -62,10 +62,10 @@ public class PessoaService {
 //        return pessoaRepository.findByProfissaoAndIdadeBetween20And40();
 //    }
 
-    public List<Pessoa> getAll(PessoaDTO pessoaDTO) {
-        Pessoa pessoa = new Pessoa();
-        BeanUtils.copyProperties(pessoaDTO, pessoa);
-        return pessoaNomeRepositoryCustom.getWithFilters(pessoaDTO);
+    public List<Pessoa> getAll(Pessoa pessoa) {
+//        Pessoa pessoa = new Pessoa();
+//        BeanUtils.copyProperties(pessoaDTO, pessoa);
+        return pessoaNomeRepositoryCustom.getWithFilters(pessoa);
     }
 
 

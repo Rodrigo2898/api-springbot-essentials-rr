@@ -21,7 +21,7 @@ public class PessoaNomeRepositoryImpl implements PessoaNomeRepositoryCustom {
 
 
     @Override
-    public List<Pessoa> getWithFilters(PessoaDTO pessoaDTO) {
+    public List<Pessoa> getWithFilters(Pessoa pessoaDTO) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Pessoa> criteriaQuery = criteriaBuilder.createQuery(Pessoa.class);
         Root<Pessoa> pessoaRoot = criteriaQuery.from(Pessoa.class);
@@ -36,9 +36,9 @@ public class PessoaNomeRepositoryImpl implements PessoaNomeRepositoryCustom {
             predicates.add(criteriaBuilder.like(pessoaRoot.get("name"), "%" + pessoaDTO.getName() + "%"));
         }
 
-        if (pessoaDTO.getIdade() != null) {
-            predicates.add(criteriaBuilder.like(pessoaRoot.get("idade"), "%" + pessoaDTO.getIdade() + "%"));
-        }
+//        if (pessoaDTO.getIdade() != null) {
+//            predicates.add(criteriaBuilder.like(pessoaRoot.get("idade"), "%" + pessoaDTO.getIdade() + "%"));
+//        }
 
         if (pessoaDTO.getProfissao() != null) {
             predicates.add(criteriaBuilder.like(pessoaRoot.get("profissao"), "%" + pessoaDTO.getProfissao() + "%"));
@@ -53,7 +53,8 @@ public class PessoaNomeRepositoryImpl implements PessoaNomeRepositoryCustom {
 
         TypedQuery<Pessoa> queryResult = entityManager.createQuery(criteriaQuery);
 
+        List<Pessoa> result = queryResult.getResultList();
 
-        return queryResult.getResultList();
+        return result;
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,17 +37,25 @@ class PessoaControllerTest {
     @BeforeEach
     void setUp() {
         PageImpl<Pessoa> pessoaPage = new PageImpl<>(List.of(PessoaCreator.createValidPessoa()));
+        List<Pessoa> pessoas = new ArrayList<>(List.of(PessoaCreator.createValidPessoa()));
+
         BDDMockito.when(pessoaServiceMock.findAll(ArgumentMatchers.any()))
                 .thenReturn(pessoaPage);
 
         BDDMockito.when(pessoaServiceMock.findAllNonPageable())
                 .thenReturn(List.of(PessoaCreator.createValidPessoa()));
 
+        BDDMockito.when(pessoaServiceMock.getAll(ArgumentMatchers.any()))
+                        .thenReturn(pessoas);
+
         BDDMockito.when(pessoaServiceMock.findById(ArgumentMatchers.anyInt()))
                 .thenReturn(PessoaCreator.createValidPessoa());
 
         BDDMockito.when(pessoaServiceMock.findByProfissao(ArgumentMatchers.anyString()))
                 .thenReturn(List.of(PessoaCreator.createValidPessoa()));
+
+        BDDMockito.when(pessoaServiceMock.findByProfissaoAndIdade(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt()))
+                        .thenReturn(List.of(PessoaCreator.createValidPessoa()));
 
         BDDMockito.when(pessoaServiceMock.save(ArgumentMatchers.any(Pessoa.class)))
                 .thenReturn(PessoaCreator.createValidPessoa());
@@ -126,6 +135,43 @@ class PessoaControllerTest {
         Assertions.assertThat(pessoaList)
                 .isNotNull()
                 .isEmpty();
+    }
+
+    @Test
+    @DisplayName("findByProfissaoAndIdade returns List of profissao and idade when successful")
+    void findByProfissaoAndIdade_ReturnsListOfProfissao_WhenSuccessful() {
+        String expectedProfissao = PessoaCreator.createValidPessoa().getProfissao();
+        Integer expectedIdade = PessoaCreator.createValidPessoa().getIdade();
+
+        List<Pessoa> pessoaList = pessoaControllerMock.findByProfissaoAndIdade("Vocalista", 62).getBody();
+
+        Assertions.assertThat(pessoaList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(pessoaList.get(0).getProfissao()).isEqualTo(expectedProfissao);
+        Assertions.assertThat(pessoaList.get(0).getIdade()).isEqualTo(expectedIdade);
+    }
+
+
+    @Test
+    @DisplayName("findWithFilters returns List  when successful")
+    void findWithFilters_ReturnsList_WhenSuccessful() {
+        String expectedName = PessoaCreator.createValidPessoa().getName();
+        Integer expectedIdade = PessoaCreator.createValidPessoa().getIdade();
+        String expectedProfissao = PessoaCreator.createValidPessoa().getProfissao();
+
+        List<Pessoa> pessoaList = pessoaControllerMock.findWithFilters().getBody();
+
+        Assertions.assertThat(pessoaList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(pessoaList.get(0).getName()).isEqualTo(expectedName);
+        Assertions.assertThat(pessoaList.get(0).getIdade()).isEqualTo(expectedIdade);
+        Assertions.assertThat(pessoaList.get(0).getProfissao()).isEqualTo(expectedProfissao);
     }
 
     @Test

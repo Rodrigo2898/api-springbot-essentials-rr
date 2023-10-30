@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Set;
 
 public interface PessoaNomeRepositoryCustom {
-    List<Pessoa> getWithFilters(PessoaDTO pessoaDTO);
+    List<Pessoa> getWithFilters(Pessoa pessoaDTO);
 }

@@ -1,6 +1,8 @@
 package academy.devdojo.springbootessentialsrr.repository;
 
 import academy.devdojo.springbootessentialsrr.domain.Pessoa;
+import academy.devdojo.springbootessentialsrr.dto.PessoaDTO;
+import academy.devdojo.springbootessentialsrr.repository.impl.PessoaNomeRepositoryImpl;
 import academy.devdojo.springbootessentialsrr.util.PessoaCreator;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.log4j.Log4j2;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +20,13 @@ import java.util.Optional;
 @DataJpaTest
 @DisplayName("Tests for Pessoa Repository")
 @Log4j2
+@ComponentScan
 class PessoaRepositoryTest {
     @Autowired
     private PessoaRepository pessoaRepository;
+
+    @Autowired
+    private PessoaNomeRepositoryImpl pessoaNomeRepository;
 
     @Test
     @DisplayName("Save persists pessao when successful")
@@ -91,6 +98,53 @@ class PessoaRepositoryTest {
 
         Assertions.assertThat(pessoas).contains(pessoaSaved);
     }
+
+    @Test
+    @DisplayName("Find by Profissao and Idade returns when successful")
+    void findBByProfissaoAndIdade_Return_ListOfPessoa_WhenSuccessful() {
+        Pessoa pessoaToBeSaved = PessoaCreator.createPessoaToBeSaved();
+        Pessoa pessoaSaved = this.pessoaRepository.save(pessoaToBeSaved);
+
+        String profissao = pessoaSaved.getProfissao();
+        Integer idade = pessoaSaved.getIdade();
+
+        List<Pessoa> pessoas = this.pessoaRepository.findByProfissaoAndIdade(profissao, idade);
+
+        Assertions.assertThat(pessoas)
+                .isNotEmpty()
+                .contains(pessoaSaved);
+
+        Assertions.assertThat(pessoas).contains(pessoaSaved);
+    }
+
+
+    @Test
+    @DisplayName("Get With filters returns when successful")
+    void getWithFiltersyProfissaoAndIdade_Return_ListOfPessoa_WhenSuccessful() {
+        Pessoa pessoaToBeSaved = PessoaCreator.createPessoaToBeSaved();
+      //  Pessoa pessoaSaved = this.pessoaRepository.save(pessoaToBeSaved);
+
+        this.pessoaRepository.save(pessoaToBeSaved);
+        String name = pessoaToBeSaved.getName();
+        Integer idade = pessoaToBeSaved.getIdade();
+        String profissao = pessoaToBeSaved.getProfissao();
+
+        //PessoaDTO pessoaDTO = new PessoaDTO(name, idade, profissao);
+
+
+
+        List<Pessoa> pessoas = this.pessoaNomeRepository.getWithFilters(pessoaToBeSaved);
+
+
+
+        Assertions.assertThat(pessoas)
+                .isNotEmpty()
+                .contains(pessoaToBeSaved);
+
+        Assertions.assertThat(pessoas).contains(pessoaToBeSaved);
+    }
+
+
 
     @Test
     @DisplayName("Find by Profissao returns empty Pessoa when pessoa is not found")

@@ -163,6 +163,58 @@ public class PessoaControllerIT {
     }
 
     @Test
+    @DisplayName("findByProfissaoAndIdade returns List of profissao and idade when successful")
+    void findByProfissaoAndIdade_ReturnsListOfProfissaoAndIdade_WhenSuccessful() {
+        Pessoa savedPessoa = pessoaRepository.save(PessoaCreator.createPessoaToBeSaved());
+        devRodUserRepository.save(USER);
+
+        String expectedProfissao = savedPessoa.getProfissao();
+        Integer expectedIdade = savedPessoa.getIdade();
+
+        String url = String.format("/pessoas/custom?profissao=%s&idade=%d", expectedProfissao, expectedIdade);
+
+        List<Pessoa> pessoaList = testRestTemplateRoleUser.exchange(url, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Pessoa>>() {
+                }).getBody();
+
+        Assertions.assertThat(pessoaList)
+                .isNotNull()
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(pessoaList.get(0).getProfissao()).isEqualTo(expectedProfissao);
+        Assertions.assertThat(pessoaList.get(0).getIdade()).isEqualTo(expectedIdade);
+    }
+
+
+    @Test
+    @DisplayName("findWithFilters returns list of pessoa when successful")
+    void findWithFilters_ReturnsListOfPessoas_WhenSuccessful() {
+        Pessoa savedPessoa = pessoaRepository.save(PessoaCreator.createPessoaToBeSaved());
+        devRodUserRepository.save(USER);
+
+        String expectedName = savedPessoa.getName();
+        Integer expectedIdade = savedPessoa.getIdade();
+        String expectedProfissao = savedPessoa.getProfissao();
+
+        List<Pessoa> pessoaList = testRestTemplateRoleUser.exchange("/pessoas/getAll", HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Pessoa>>() {
+                }).getBody();
+
+        Assertions.assertThat(pessoaList).isNotNull();
+
+        Assertions.assertThat(pessoaList)
+                .isNotEmpty()
+                .hasSize(1);
+
+        Assertions.assertThat(pessoaList.get(0).getName()).isEqualTo(expectedName);
+        Assertions.assertThat(pessoaList.get(0).getIdade()).isEqualTo(expectedIdade);
+        Assertions.assertThat(pessoaList.get(0).getProfissao()).isEqualTo(expectedProfissao);
+    }
+
+
+
+    @Test
     @DisplayName("findByProfissao returns an empty List of profissao when pro3fissao is not found")
     void findByProfissao_ReturnsEmptyListOfProfissao_WhenProfissaoIsNotFound() {
         devRodUserRepository.save(USER);
